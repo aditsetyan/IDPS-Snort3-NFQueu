@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% block title %}IP Blocklist{% endblock %}
+{% block body_class %}snort-logs-page{% endblock %}
+
+{% block content %}
+<div class="ids-console">
+
+  <!-- HEADER -->
+  <header class="ids-header">
+    <div>
+      <h1>IP Blocklist</h1>
+      <p>Daftar IP berbahaya yang akan diblokir oleh IDS/IPS.</p>
+    </div>
+
+    <div class="ids-header__cta">
+      <span class="ids-counter">Total IP: <strong>{{ total }}</strong></span>
+      <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="clear">
+
+        <button class="btn btn-outline-danger btn-sm"
+                onclick="return confirm('Hapus seluruh blocklist?')">
+          <i class="fas fa-trash-alt"></i> Clear All
+        </button>
+      </form>
+    </div>
+  </header>
+
+  <!-- BOX 1: FILTER -->
+  <section class="ids-filter-card mb-4">
+    <h5 class="mb-3"><i class="fas fa-filter me-1"></i> Filter</h5>
+
+    <form method="get" class="ids-filter-form">
+      <div class="ids-filter-row">
+        <label>
+          <span>Cari IP</span>
+          <input type="text" name="ip" placeholder="202.10.10.5" value="{{ filters.ip }}">
+        </label>
+
+        <label>
+          <span>Keterangan</span>
+          <input type="text" name="note" placeholder="Attacker NMAP" value="{{ filters.note }}">
+        </label>
+      </div>
+
+      <div class="ids-filter-actions">
+        <button class="btn btn-primary btn-sm">
+          <i class="fas fa-search"></i> Cari
+        </button>
+
+        <a href="{% url 'snort:ip_blocklist' %}"
+           class="btn btn-outline-secondary btn-sm">Reset</a>
+      </div>
+    </form>
+  </section>
+
+  <!-- BOX 2: TAMBAH IP -->
+  <section class="ids-filter-card mb-4">
+    <h5 class="mb-3"><i class="fas fa-plus-circle me-1"></i> Tambah IP Baru</h5>
+
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="add">
+
+      <div class="ids-filter-row">
+        <label>
+          <span>IP Address</span>
+          <input type="text" name="new_ip" required placeholder="Contoh: 202.10.10.5">
+        </label>
+
+        <label>
+          <span>Keterangan</span>
+          <input type="text" name="new_note" placeholder="Contoh: Port Scan">
+        </label>
+      </div>
+
+      <button class="btn btn-danger btn-sm mt-2">
+        <i class="fas fa-plus"></i> Tambah Blocklist
+      </button>
+    </form>
+  </section>
+
+  <!-- BOX 3: TABLE -->
+  <section class="ids-table-card">
+    {% if page_obj %}
+      <div class="ids-table-scroll">
+        <table class="ids-table">
+          <thead>
+            <tr>
+              <th>IP Address</th>
+              <th>Keterangan</th>
+              <th>Diblock Pada</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for item in page_obj %}
+              <tr>
+                <td>{{ item.ip }}</td>
+                <td>{{ item.note|default:"—" }}</td>
+                <td>{{ item.created_at }}</td>
+
+                <td>
+                  <form method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="delete">
+                    <input type="hidden" name="ip" value="{{ item.ip }}">
+
+                    <button class="btn btn-danger btn-sm"
+                            onclick="return confirm('Hapus {{ item.ip }} dari blocklist?')">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </form>
+                </td>
+
+              </tr>
+            {% endfor %}
+          </tbody>
+
+        </table>
+      </div>
+
+      <div class="ids-table-footer">
+        <span>
+          Menampilkan {{ page_obj.start_index }}–{{ page_obj.end_index }}
+          dari {{ page_obj.paginator.count }} entri
+        </span>
+        {% include 'pagination.html' %}
+      </div>
+
+    {% else %}
+      <div class="ids-empty">
+        <i class="fas fa-info-circle me-2"></i>
+        Tidak ada data blocklist.
+      </div>
+    {% endif %}
+  </section>
+
+</div>
+{% endblock %}

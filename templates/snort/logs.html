@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+{% block title %}Snort Logs{% endblock %}
+
+{% block body_class %}snort-logs-page{% endblock %}
+
+{% block extra_head %}
+{% endblock %}
+
+{% block content %}
+<div class="ids-console">
+  <header class="ids-header">
+    <div>
+      <h1>Intrusion Detection Logs</h1>
+      <p>Log Snort real-time untuk memantau aktivitas jaringan dan rule yang aktif.</p>
+    </div>
+    <div class="ids-header__cta">
+      <span class="ids-counter">Total Alerts: <strong>{{ total_alerts }}</strong></span>
+      <form method="post" class="ids-clear-form">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="clear">
+        <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Yakin ingin menghapus semua log Snort?')">
+          <i class="fas fa-trash-alt me-1"></i> Clear Logs
+        </button>
+      </form>
+    </div>
+  </header>
+
+  <section class="ids-filter-card">
+    <form method="get" class="ids-filter-form">
+      <div class="ids-filter-row">
+        <label>
+          <span>Action</span>
+          <select name="action" class="form-select form-select-sm">
+            <option value="" {% if not filters.action %}selected{% endif %}>All</option>
+            <option value="alert" {% if filters.action == 'alert' %}selected{% endif %}>Alert</option>
+            <option value="drop" {% if filters.action == 'drop' %}selected{% endif %}>Drop</option>
+          </select>
+        </label>
+        <label>
+          <span>Rule / Signature</span>
+          <input type="text" name="signature" placeholder="Contoh: SQL Injection" value="{{ filters.signature }}">
+        </label>
+        <label>
+          <span>Source IP</span>
+          <input type="text" name="src_ip" placeholder="192.168.x.x" value="{{ filters.src_ip }}">
+        </label>
+        <label>
+          <span>Destination IP</span>
+          <input type="text" name="dst_ip" placeholder="10.0.x.x" value="{{ filters.dst_ip }}">
+        </label>
+        <label>
+          <span>Src Port</span>
+          <input type="number" min="0" name="src_port" value="{{ filters.src_port }}">
+        </label>
+        <label>
+          <span>Dst Port</span>
+          <input type="number" min="0" name="dst_port" value="{{ filters.dst_port }}">
+        </label>
+        <label>
+          <span>Protocol</span>
+          <input type="text" name="protocol" placeholder="TCP / UDP" value="{{ filters.protocol }}">
+        </label>
+      </div>
+      <div class="ids-filter-actions">
+        <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-search me-1"></i>Terapkan</button>
+        <a class="btn btn-outline-secondary btn-sm" href="{% url 'snort:logs' %}">Reset</a>
+        {% if active_log_files %}
+          <span class="ids-active-files">Aktif: {{ active_log_files|join:", " }}</span>
+        {% endif %}
+      </div>
+    </form>
+  </section>
+
+  <section class="ids-table-card">
+    {% if page_obj %}
+      <div class="ids-table-scroll">
+        <table class="ids-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Action</th>
+              <th>Rule / Signature</th>
+              <th>Source</th>
+              <th>Src Port</th>
+              <th>Destination</th>
+              <th>Dst Port</th>
+              <th>Protocol</th>
+              <th>Priority</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for alert in page_obj %}
+              {% with ts=alert.timestamp|default:'' %}
+              <tr>
+                <td>{{ ts|slice:"0:10" }}</td>
+                <td>{{ ts|slice:"11:19" }}</td>
+                <td class="ids-status">
+                  {% with act=alert.action|default:"alert" %}
+                    {% if act|lower == "drop" %}
+                      <span class="status-pill status-pill--drop">drop</span>
+                    {% else %}
+                      <span class="status-pill status-pill--alert">alert</span>
+                    {% endif %}
+                  {% endwith %}
+                </td>
+                <td class="ids-rule">
+                  <div class="ids-rule__name">{{ alert.signature|default:"-" }}</div>
+                </td>
+                <td>{{ alert.src_ip|default:"—" }}</td>
+                <td>{{ alert.src_port|default:"—" }}</td>
+                <td>{{ alert.dst_ip|default:"—" }}</td>
+                <td>{{ alert.dst_port|default:"—" }}</td>
+                <td>{{ alert.protocol|default:"—" }}</td>
+                <td>{{ alert.priority|default:"—" }}</td>
+              </tr>
+              {% endwith %}
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="ids-table-footer">
+        {% if page_obj.paginator.count %}
+          <span>Menampilkan {{ page_obj.start_index }}–{{ page_obj.end_index }} dari {{ page_obj.paginator.count }} entri</span>
+        {% else %}
+          <span>Tidak ada data</span>
+        {% endif %}
+        {% if page_obj.has_other_pages %}
+          <nav aria-label="Pagination">
+            <ul class="pagination pagination-sm mb-0">
+              {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page=1">First</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Prev</a></li>
+              {% endif %}
+              <li class="page-item active"><span class="page-link">{{ page_obj.number }}/{{ page_obj.paginator.num_pages }}</span></li>
+              {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a></li>
+              {% endif %}
+            </ul>
+          </nav>
+        {% endif %}
+      </div>
+    {% else %}
+      <div class="ids-table-scroll">
+        <table class="ids-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Action</th>
+              <th>Rule / Signature</th>
+              <th>Source</th>
+              <th>Src Port</th>
+              <th>Destination</th>
+              <th>Dst Port</th>
+              <th>Protocol</th>
+              <th>Priority</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="ids-table-empty-row">
+              <td colspan="10">
+                <div class="ids-empty">
+                  <i class="fas fa-info-circle fa-lg me-2"></i> Tidak ada alert Snort yang tersedia.
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

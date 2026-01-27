@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% block title %}Snort Rules{% endblock %}
+
+{% block body_class %}snort-rules-page{% endblock %}
+
+{% block extra_head %}{% endblock %}
+
+{% block content %}
+<div class="rules-shell">
+  <!-- Card 1: Header & Metrics -->
+  <section class="rules-card rules-card--header">
+    <div class="rules-card__body">
+      <div class="rules-card__title">
+        <h1 class="mb-2">Snort Rules</h1>
+        <p class="mb-0">Kelola file aturan Snort dan telusuri signature dengan cepat.</p>
+      </div>
+      <div class="rules-metrics">
+        <div class="rules-metric">
+          <span class="rules-metric__label">File Rules</span>
+          <span class="rules-metric__value">{{ total_rule_files }}</span>
+        </div>
+        <div class="rules-metric">
+          <span class="rules-metric__label">Total Rules</span>
+          <span class="rules-metric__value">{{ total_rules_all|default:"0" }}</span>
+        </div>
+      </div>
+    </div>
+    {% if any_unknown_rules %}
+      <div class="rules-card__footer alert alert-info mb-0">
+        Beberapa file besar mungkin belum terhitung otomatis. Buka file untuk memuat jumlah rule sepenuhnya.
+      </div>
+    {% endif %}
+  </section>
+
+  <!-- Card 2: File list -->
+  <section class="rules-card rules-card--list">
+    <div class="rules-card__body">
+      <div class="rules-card__header">
+        <h2 class="h5 mb-0">Daftar File Rules</h2>
+        <span class="badge bg-opacity-50 bg-secondary">{{ total_rule_files }}</span>
+      </div>
+      <form method="get" class="rules-file-search">
+        <input type="text" class="form-control" name="file_search" placeholder="Cari nama file" value="{{ file_search }}">
+        {% if search_term %}<input type="hidden" name="search" value="{{ search_term }}">{% endif %}
+        {% if selected_file %}<input type="hidden" name="file" value="{{ selected_file.name }}">{% endif %}
+        <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-search me-1"></i>Cari</button>
+        {% if file_search %}
+          <a class="btn btn-outline-secondary btn-sm" href="?{% if search_term %}search={{ search_term|urlencode }}&{% endif %}{% if selected_file %}file={{ selected_file.name }}{% endif %}">Reset</a>
+        {% endif %}
+      </form>
+      <div class="rules-file-list">
+        {% if rule_files %}
+          {% for file in rule_files %}
+            <a class="rules-file-item {% if selected_file and selected_file.path == file.path %}is-active{% endif %}"
+               href="?file={{ file.name }}{% if search_term %}&search={{ search_term|urlencode }}{% endif %}{% if file_search %}&file_search={{ file_search|urlencode }}{% endif %}">
+              <div class="rules-file-item__name">{{ file.name }}</div>
+              <div class="rules-file-item__meta">
+                {% if file.modified %}<span>{{ file.modified|date:"d M Y H:i" }}</span>{% endif %}
+                {% if file.size is not None %}<span>{{ file.size|filesizeformat }}</span>{% endif %}
+                {% if file.rule_count is not None %}<span>{{ file.rule_count }} rule</span>{% endif %}
+              </div>
+            </a>
+          {% endfor %}
+        {% else %}
+          <div class="rules-empty text-center py-4">
+            <i class="fas fa-folder-open fa-lg mb-2"></i>
+            <p class="mb-0">Tidak ada file rules ditemukan.</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  <!-- Card 3: Detail -->
+  <section class="rules-card rules-card--detail">
+    <div class="rules-card__body">
+      {% if selected_file %}
+        <div class="rules-card__header rules-card__header--detail">
+          <div>
+            <h2 class="h5 mb-1">{{ selected_file.name }}</h2>
+            <div class="rules-file-item__meta">
+              <span>{{ selected_file.directory }}</span>
+              {% if selected_file.size is not None %}<span>{{ selected_file.size|filesizeformat }}</span>{% endif %}
+              {% if selected_file.modified %}<span>{{ selected_file.modified|date:"d M Y H:i" }}</span>{% endif %}
+            </div>
+          </div>
+          <form method="get" class="rules-search">
+            <input type="hidden" name="file" value="{{ selected_file.name }}">
+            {% if file_search %}<input type="hidden" name="file_search" value="{{ file_search }}">{% endif %}
+            <input type="text" class="form-control" name="search" placeholder="Cari SID atau keyword" value="{{ search_term }}">
+            <button type="submit" class="btn btn-primary"><i class="fas fa-search me-1"></i>Cari</button>
+            <a class="btn btn-outline-secondary" href="?file={{ selected_file.name }}{% if file_search %}&file_search={{ file_search|urlencode }}{% endif %}">Reset</a>
+          </form>
+        </div>
+        {% if selected_rule_count is not None %}
+          <div class="rules-detail-info">Perkiraan rules dalam file ini: <strong>{{ selected_rule_count }}</strong></div>
+        {% endif %}
+
+        {% if read_error %}
+          <div class="alert alert-danger mt-3">{{ read_error }}</div>
+        {% endif %}
+
+        {% if rules_preview %}
+          <div class="rules-preview-meta">Menampilkan {{ rules_preview|length }} baris</div>
+          <ol class="rules-preview-list mt-3">
+            {% for line in rules_preview %}
+              <li class="{% if line.is_comment %}comment{% endif %}">
+                <code>{{ line.content|default_if_none:''|escape }}</code>
+              </li>
+            {% empty %}
+              <li><code class="text-muted">File kosong.</code></li>
+            {% endfor %}
+          </ol>
+          {% if truncated %}
+            <div class="alert alert-warning mt-3">
+              Tampilan dibatasi pada {{ rules_preview|length }} baris pertama. Gunakan pencarian untuk mempersempit hasil.
+            </div>
+          {% endif %}
+        {% else %}
+          <p class="text-muted mb-0 mt-3">Tidak ada konten yang dapat ditampilkan untuk file ini.</p>
+        {% endif %}
+      {% else %}
+        <div class="rules-empty text-center py-5">
+          <i class="fas fa-info-circle fa-lg mb-3"></i>
+          <p class="mb-0">Pilih salah satu file rules di card di atas untuk melihat detailnya.</p>
+        </div>
+      {% endif %}
+    </div>
+  </section>
+</div>
+{% endblock %}

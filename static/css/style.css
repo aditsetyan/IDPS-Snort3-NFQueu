@@ -1,0 +1,1212 @@
+/* ========================================= */
+/* 1. ROOT VARIABLE & GLOBAL LAYOUT         */
+/* ========================================= */
+
+:root {
+    --bg-secondary: #1a1a1a;
+    --text-primary: #e7e8ea;
+    --text-secondary: #9ca3af;
+    --accent-blue: #3b82f6;
+    --border-color: #2a2a2a;
+}
+
+/* Global layout */
+body {
+    min-height: 100vh;
+    overflow-x: hidden;
+    background-color: #f4f6f9;
+}
+
+/* ========================================= */
+/* 2. SIDEBAR (MENU SAMPING)                */
+/* ========================================= */
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 72px;
+    background: var(--bg-secondary);
+    border-right: 1px solid var(--border-color);
+    color: var(--text-primary);
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    transition: width 0.3s ease;
+    overflow: hidden;
+}
+
+/* Sidebar melebar saat sidebar-open atau hover */
+body.sidebar-open .sidebar,
+.sidebar:hover {
+    width: 230px;
+}
+
+/* Header logo/sidebar ketika sidebar tertutup */
+body:not(.sidebar-open) .sidebar-head {
+    padding: 20px 0;
+    display: flex;
+    justify-content: center;
+}
+
+body:not(.sidebar-open) .sidebar-head a {
+    justify-content: center;
+    gap: 0;
+}
+
+body:not(.sidebar-open) .sidebar-head .label {
+    display: none !important;
+}
+
+/* Header di dalam sidebar */
+.sidebar-head {
+    padding: 20px 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.sidebar-head a {
+    color: var(--text-primary);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sidebar-head i {
+    font-size: 20px;
+    color: var(--accent-blue);
+    min-width: 28px;
+}
+
+.sidebar .label {
+    display: none;
+    white-space: nowrap;
+}
+
+body.sidebar-open .sidebar .label,
+.sidebar:hover .label {
+    display: inline;
+}
+
+/* Daftar navigasi */
+.sidebar .nav {
+    padding: 12px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.sidebar .nav-link {
+    color: var(--text-primary);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    transition: background 0.25s, color 0.25s, transform 0.25s;
+    justify-content: center;
+}
+
+body:not(.sidebar-open) .sidebar .nav-link {
+    padding: 12px 0;
+    gap: 0;
+}
+
+body.sidebar-open .sidebar .nav-link,
+.sidebar:hover .nav-link {
+    justify-content: flex-start;
+}
+
+.sidebar .nav-link i {
+    min-width: 24px;
+    text-align: center;
+    font-size: 18px;
+}
+
+/* Hover & active state nav-link */
+.sidebar .nav-link:hover {
+    background: rgba(59, 130, 246, 0.15);
+    color: var(--accent-blue);
+    transform: translateX(4px);
+}
+
+.sidebar .nav-link.active {
+    background: rgba(59, 130, 246, 0.22);
+    color: #fff;
+    box-shadow: inset 3px 0 0 var(--accent-blue);
+}
+
+/* Footer di dalam sidebar */
+.sidebar .sidebar-footer {
+    margin-top: auto;
+    padding: 12px 12px;
+    border-top: 1px solid var(--border-color);
+}
+
+.sidebar .sidebar-footer .dropdown-toggle {
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+/* Sidebar group (dropdown di sidebar) */
+.sidebar .nav .sidebar-group {
+    margin: 6px 8px 10px;
+    padding: 0;
+}
+
+.sidebar .nav .sidebar-group .sidebar-group-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-primary);
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    transition: background 0.25s ease;
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+}
+
+.sidebar .nav .sidebar-group .sidebar-group-header:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+body:not(.sidebar-open) .sidebar-group-header span {
+    display: none;
+}
+
+body:not(.sidebar-open) .sidebar-group-header {
+    justify-content: center;
+}
+
+.sidebar:hover .sidebar-group-header span {
+    display: inline;
+}
+
+.sidebar:hover .sidebar-group-header {
+    justify-content: flex-start;
+}
+
+/* Sub menu di dalam group */
+.sidebar-subnav {
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+    padding: 0 12px 12px;
+}
+
+body.sidebar-open .sidebar .nav .sidebar-group.open .sidebar-subnav,
+.sidebar:hover .nav .sidebar-group.open .sidebar-subnav {
+    display: flex;
+}
+
+body:not(.sidebar-open) .sidebar .nav .sidebar-group {
+    align-items: center;
+}
+
+body:not(.sidebar-open) .sidebar .nav .sidebar-group .sidebar-group-header {
+    width: 100%;
+    padding: 10px 0;
+}
+
+.sidebar-subnav .sub-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: 8px 10px;
+    border-radius: 10px;
+    transition: background 0.25s ease, color 0.25s ease;
+}
+
+.sidebar-subnav .sub-link i {
+    width: 18px;
+    text-align: center;
+}
+
+.sidebar-subnav .sub-link span {
+    display: none;
+}
+
+body.sidebar-open .sidebar-subnav .sub-link span,
+.sidebar:hover .sidebar-subnav .sub-link span {
+    display: inline;
+}
+
+.sidebar-subnav .sub-link:hover {
+    background: rgba(59, 130, 246, 0.15);
+    color: var(--accent-blue);
+}
+
+.sidebar-subnav .sub-link.active {
+    background: rgba(59, 130, 246, 0.25);
+    color: #fff;
+}
+
+/* Footer badge bawah kanan (branding/info) */
+.app-footer {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    z-index: 950;
+}
+
+.app-footer .footer-inner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(15, 15, 15, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 50px;
+    padding: 10px 16px;
+    font-size: 0.8rem;
+    color: #d1d5db;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+}
+
+/* ========================================= */
+/* 3. CONTENT LAYOUT (ISI HALAMAN)          */
+/* ========================================= */
+
+.content {
+    margin-left: 72px;
+    padding: 20px;
+    min-height: 100vh;
+    background-color: #f4f6f9;
+    transition: margin-left 0.3s ease;
+}
+
+/* Saat sidebar dibuka (lebar 230px) */
+body.sidebar-open .content {
+    margin-left: 230px;
+}
+
+.alert {
+    margin-top: 6px;
+}
+
+/* ========================================= */
+/* 4. DASHBOARD (HALAMAN UTAMA)             */
+/* ========================================= */
+
+body.dashboard-page {
+    --bg-primary: #0f0f0f;
+    --bg-card: #141414;
+    --accent-red: #ef4444;
+    --accent-yellow: #f59e0b;
+    --accent-blue: #3b82f6;
+    --accent-green: #10b981;
+    --accent-slate: #64748b;
+
+    background-color: var(--bg-primary) !important;
+    color: var(--text-primary);
+}
+
+body.dashboard-page .content {
+    background-color: var(--bg-primary) !important;
+}
+
+/* Header dashboard (judul besar & deskripsi) */
+body.dashboard-page .dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+body.dashboard-page .header-title h1 {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: var(--text-primary);
+}
+
+body.dashboard-page .header-title p {
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+/* Tombol aksi di header (kalau dipakai) */
+body.dashboard-page .header-actions {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+body.dashboard-page .refresh-btn {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+body.dashboard-page .refresh-btn:hover {
+    background: var(--accent-blue);
+    border-color: var(--accent-blue);
+}
+
+body.dashboard-page .time-range {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 8px 12px;
+    border-radius: 6px;
+    outline: none;
+}
+
+/* GRID UTAMA UNTUK STATUS CARD (4–2–1 kolom) */
+body.dashboard-page .status-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+    margin-bottom: 14px;       /* dari 30 → 14, lebih rapat */
+}
+
+
+/* Card status (Total Alerts, Rules, Whitelist, Blocklist) */
+body.dashboard-page .status-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+/* Garis warna di sisi kiri card */
+body.dashboard-page .status-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+}
+
+body.dashboard-page .status-card.red::before {
+    background: var(--accent-red);
+}
+
+body.dashboard-page .status-card.yellow::before {
+    background: var(--accent-yellow);
+}
+
+body.dashboard-page .status-card.blue::before {
+    background: var(--accent-blue);
+}
+
+body.dashboard-page .status-card.green::before {
+    background: var(--accent-green);
+}
+
+body.dashboard-page .status-card.slate::before {
+    background: var(--accent-slate);
+}
+
+/* Header di dalam card */
+body.dashboard-page .status-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+body.dashboard-page .status-title {
+    color: var(--text-secondary);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Icon di card */
+body.dashboard-page .status-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+}
+
+body.dashboard-page .status-card.red .status-icon {
+    background: rgba(239, 68, 68, 0.2);
+    color: var(--accent-red);
+}
+
+body.dashboard-page .status-card.yellow .status-icon {
+    background: rgba(245, 158, 11, 0.2);
+    color: var(--accent-yellow);
+}
+
+body.dashboard-page .status-card.blue .status-icon {
+    background: rgba(59, 130, 246, 0.2);
+    color: var(--accent-blue);
+}
+
+body.dashboard-page .status-card.green .status-icon {
+    background: rgba(16, 185, 129, 0.2);
+    color: var(--accent-green);
+}
+
+body.dashboard-page .status-card.slate .status-icon {
+    background: rgba(100, 116, 139, 0.2);
+    color: var(--accent-slate);
+}
+
+/* Nilai utama di card */
+body.dashboard-page .status-value {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    line-height: 1;
+    transition: color 0.5s ease;
+}
+
+/* Keterangan kecil di bawah nilai */
+body.dashboard-page .status-change {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+}
+
+body.dashboard-page .status-change.positive {
+    color: var(--accent-green);
+}
+
+body.dashboard-page .status-change.negative {
+    color: var(--accent-red);
+}
+
+/* ========================================= */
+/* 5. LOGIN PAGE                             */
+/* ========================================= */
+
+body.login-page {
+    --bg-primary: #0f0f0f;
+    background-color: var(--bg-primary) !important;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgb(0, 26, 255);
+}
+
+body.login-page .login-card {
+    background: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    padding: 40px;
+    width: 100%;
+    max-width: 400px;
+}
+
+body.login-page .login-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+body.login-page .login-header h2 {
+    color: #333;
+    font-weight: bold;
+}
+
+body.login-page .login-header p {
+    color: #666;
+    font-size: 14px;
+}
+
+/* ========================================= */
+/* 6. SNORT LOGS PAGE                        */
+/* ========================================= */
+
+body.snort-logs-page {
+    --logs-bg: #f4f6fb;
+    --logs-surface: #ffffff;
+    --logs-border: #d9dce3;
+    --logs-text: #1f2937;
+    --logs-muted: #4b5563;
+    --logs-highlight: rgba(59, 130, 246, 0.25);
+
+    background: var(--logs-bg) !important;
+    color: var(--logs-text);
+}
+
+body.snort-logs-page .content {
+    background: var(--logs-bg) !important;
+    color: var(--logs-text);
+}
+
+body.snort-logs-page .ids-console {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+/* Header log Snort */
+body.snort-logs-page .ids-header {
+    background: #ffffff;
+    border: 1px solid #d9dce3;
+    border-radius: 6px;
+    padding: 18px 22px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+}
+
+body.snort-logs-page .ids-header h1 {
+    font-size: 24px;
+    margin-bottom: 4px;
+    color: #1f2937;
+}
+
+body.snort-logs-page .ids-header p {
+    margin-bottom: 0;
+    color: #4b5563;
+    font-size: 0.9rem;
+}
+
+body.snort-logs-page .ids-header__cta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+body.snort-logs-page .ids-counter {
+    font-weight: 600;
+    color: #1f2937;
+}
+
+/* Card filter log */
+body.snort-logs-page .ids-filter-card {
+    background: #ffffff;
+    border: 1px solid #d9dce3;
+    border-radius: 6px;
+    padding: 16px 20px;
+}
+
+body.snort-logs-page .ids-filter-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+body.snort-logs-page .ids-filter-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+}
+
+body.snort-logs-page .ids-filter-form label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: #6b7280;
+}
+
+body.snort-logs-page .ids-filter-form input,
+body.snort-logs-page .ids-filter-form select {
+    font-size: 0.85rem;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    padding: 6px 8px;
+    color: #1f2937;
+    background: #ffffff;
+}
+
+body.snort-logs-page .ids-filter-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.85rem;
+    color: #4b5563;
+}
+
+body.snort-logs-page .ids-active-files {
+    margin-left: auto;
+}
+
+/* Tabel log */
+body.snort-logs-page .ids-table-card {
+    background: #ffffff;
+    border: 1px solid #d9dce3;
+    border-radius: 6px;
+}
+
+body.snort-logs-page .ids-table-scroll {
+    overflow-x: auto;
+}
+
+body.snort-logs-page .ids-table {
+    width: 100%;
+    min-width: 960px;
+    border-collapse: collapse;
+    font-size: 0.87rem;
+    color: #1f2937;
+}
+
+body.snort-logs-page .ids-table thead {
+    background: #edf2ff;
+    border-bottom: 1px solid #c7d2fe;
+}
+
+body.snort-logs-page .ids-table th {
+    padding: 10px 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    color: #1e3a8a;
+    border-right: 1px solid #dbe4ff;
+    white-space: nowrap;
+}
+
+body.snort-logs-page .ids-table th:last-child {
+    border-right: none;
+}
+
+body.snort-logs-page .ids-table td {
+    padding: 10px 12px;
+    border-right: 1px solid #eef2ff;
+    border-bottom: 1px solid #eef2ff;
+    background: #ffffff;
+}
+
+body.snort-logs-page .ids-table tbody tr:hover td {
+    background: #f1f5ff;
+}
+
+body.snort-logs-page .ids-table td:last-child {
+    border-right: none;
+}
+
+body.snort-logs-page .ids-table tbody tr:nth-child(even) td {
+    background: #fafbff;
+}
+
+body.snort-logs-page .ids-table-empty-row td {
+    padding: 36px 16px;
+    text-align: center;
+    background: #ffffff;
+    color: #6b7280;
+}
+
+/* Nama rule & status */
+body.snort-logs-page .ids-rule__name {
+    font-weight: 600;
+    color: #1f2937;
+}
+
+body.snort-logs-page .ids-status {
+    text-align: center;
+}
+
+body.snort-logs-page .status-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+body.snort-logs-page .status-pill--drop {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+body.snort-logs-page .status-pill--alert {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+/* Footer tabel log */
+body.snort-logs-page .ids-table-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: #f3f4f6;
+    border-top: 1px solid #d9dce3;
+    font-size: 0.85rem;
+    color: #4b5563;
+}
+
+body.snort-logs-page .ids-empty {
+    padding: 40px;
+    text-align: center;
+    color: #6b7280;
+}
+
+/* Pagination log */
+body.snort-logs-page .pagination .page-link {
+    color: #1f2937;
+    background: #ffffff;
+    border-color: #d1d5db;
+}
+
+body.snort-logs-page .pagination .page-link:hover {
+    background: #2563eb;
+    color: #ffffff;
+    border-color: #2563eb;
+}
+
+body.snort-logs-page .pagination .page-item.active .page-link {
+    background: #2563eb;
+    color: #ffffff;
+    border-color: #2563eb;
+}
+
+/* ========================================= */
+/* 7. SNORT RULES PAGE                       */
+/* ========================================= */
+
+body.snort-rules-page {
+    --rules-bg: #f4f6fb;
+    --rules-surface: #ffffff;
+    --rules-border: #d9dce3;
+    --rules-text: #1f2937;
+    --rules-muted: #4b5563;
+    --accent-red: #ef4444;
+    --accent-yellow: #f59e0b;
+    --accent-blue: #2563eb;
+    --accent-slate: #64748b;
+
+    background: var(--rules-bg) !important;
+    color: var(--rules-text);
+}
+
+body.snort-rules-page .content {
+    background: var(--rules-bg) !important;
+    color: var(--rules-text);
+}
+
+body.snort-rules-page .rules-shell {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+/* Card utama rules */
+body.snort-rules-page .rules-card {
+    background: var(--rules-surface);
+    border: 1px solid var(--rules-border);
+    border-radius: 6px;
+    box-shadow: 0 12px 26px rgba(15, 23, 42, 0.15);
+}
+
+body.snort-rules-page .rules-card--header .rules-card__body {
+    gap: 16px;
+}
+
+body.snort-rules-page .rules-card__body {
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    position: relative;
+    z-index: 2;
+}
+
+body.snort-rules-page .rules-card__title h1 {
+    font-size: 28px;
+    margin-bottom: 6px;
+}
+
+body.snort-rules-page .rules-card__title p {
+    color: var(--rules-muted);
+    margin-bottom: 0;
+}
+
+body.snort-rules-page .text-muted {
+    color: var(--rules-muted) !important;
+}
+
+body.snort-rules-page .rules-card__footer {
+    border-top: 1px solid var(--rules-border);
+    padding: 12px 20px;
+    position: relative;
+    z-index: 2;
+}
+
+/* Metrik rules */
+body.snort-rules-page .rules-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+}
+
+body.snort-rules-page .rules-metric {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: var(--rules-surface);
+    border: 1px solid var(--rules-border);
+    color: var(--rules-text);
+}
+
+body.snort-rules-page .rules-metric:nth-child(1) {
+    border-left: 4px solid var(--accent-red);
+}
+
+body.snort-rules-page .rules-metric:nth-child(2) {
+    border-left: 4px solid var(--accent-yellow);
+}
+
+body.snort-rules-page .rules-metric__label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+body.snort-rules-page .rules-metric__value {
+    font-size: 1.6rem;
+    font-weight: 600;
+}
+
+/* Header card detail rules */
+body.snort-rules-page .rules-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    border-bottom: 1px solid var(--rules-border);
+    padding-bottom: 12px;
+}
+
+/* Pencarian file rules */
+body.snort-rules-page .rules-file-search {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 12px 0;
+    align-items: center;
+}
+
+body.snort-rules-page .rules-file-search .form-control {
+    max-width: 220px;
+    background: #ffffff;
+    border: 1px solid var(--rules-border);
+    color: var(--rules-text);
+}
+
+body.snort-rules-page .rules-file-search .btn-primary {
+    background: var(--accent-blue);
+    border-color: var(--accent-blue);
+    color: #ffffff;
+}
+
+body.snort-rules-page .rules-file-search .btn-outline-secondary {
+    border-color: var(--rules-border);
+    color: var(--rules-muted);
+}
+
+/* Header detail rules (judul + info file) */
+body.snort-rules-page .rules-card__header--detail {
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+
+/* Daftar file rules di sisi kiri */
+body.snort-rules-page .rules-file-list {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--rules-border);
+    border-radius: 6px;
+    overflow: hidden;
+    background: #ffffff;
+    max-height: 380px;
+    overflow-y: auto;
+}
+
+body.snort-rules-page .rules-file-item {
+    display: block;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--rules-border);
+    color: var(--rules-text);
+    text-decoration: none;
+    transition: background 0.15s ease;
+}
+
+body.snort-rules-page .rules-file-item:last-child {
+    border-bottom: none;
+}
+
+body.snort-rules-page .rules-file-item:hover {
+    background: #eef2ff;
+}
+
+body.snort-rules-page .rules-file-item.is-active {
+    background: #e0e7ff;
+    border-left: 4px solid var(--accent-blue);
+    padding-left: 8px;
+}
+
+body.snort-rules-page .rules-file-item__name {
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+body.snort-rules-page .rules-file-item__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 0.78rem;
+    color: var(--rules-muted);
+}
+
+/* Pencarian isi rules */
+body.snort-rules-page .rules-search {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+body.snort-rules-page .rules-search .form-control {
+    min-width: 200px;
+    background: #ffffff;
+    border: 1px solid var(--rules-border);
+    color: var(--rules-text);
+}
+
+body.snort-rules-page .rules-search .btn-primary {
+    background: var(--accent-blue);
+    border-color: var(--accent-blue);
+    color: #ffffff;
+}
+
+body.snort-rules-page .rules-search .btn-outline-secondary {
+    border-color: var(--rules-border);
+    color: var(--rules-muted);
+}
+
+body.snort-rules-page .rules-search .btn-outline-secondary:hover {
+    background: rgba(37, 99, 235, 0.12);
+    color: var(--accent-blue);
+}
+
+/* Info text kecil */
+body.snort-rules-page .rules-detail-info {
+    font-size: 0.8rem;
+    color: var(--rules-muted);
+}
+
+body.snort-rules-page .rules-preview-meta {
+    font-size: 0.75rem;
+    color: var(--rules-muted);
+    text-align: right;
+}
+
+/* Preview isi rules (kode) */
+body.snort-rules-page .rules-preview-list {
+    counter-reset: rule-line;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-family: "Fira Code", "Source Code Pro", monospace;
+    font-size: 0.9rem;
+    background: #f9fbff;
+    border: 1px solid var(--rules-border);
+    border-radius: 6px;
+    max-height: 420px;
+    overflow-y: auto;
+}
+
+body.snort-rules-page .rules-preview-list li {
+    counter-increment: rule-line;
+    position: relative;
+    padding: 8px 14px 8px 54px;
+    border-bottom: 1px solid var(--rules-border);
+    color: var(--rules-text);
+    word-break: break-word;
+    background: #ffffff;
+}
+
+body.snort-rules-page .rules-preview-list li:last-child {
+    border-bottom: 0;
+}
+
+body.snort-rules-page .rules-preview-list li::before {
+    content: counter(rule-line, decimal-leading-zero);
+    position: absolute;
+    left: 18px;
+    top: 10px;
+    color: var(--rules-muted);
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+body.snort-rules-page .rules-preview-list li code {
+    display: block;
+    white-space: pre-wrap;
+}
+
+body.snort-rules-page .rules-preview-list li.comment code {
+    color: var(--rules-muted);
+    font-style: italic;
+}
+
+body.snort-rules-page .rules-empty {
+    padding: 32px;
+    text-align: center;
+    color: var(--rules-muted);
+    background: #f9fafc;
+    border: 1px dashed var(--rules-border);
+    border-radius: 6px;
+}
+
+/* ========================================= */
+/* 8. GRAFIK (CHART.JS) — FIX FINAL HEIGHT  */
+/* ========================================= */
+
+body.dashboard-page .chart-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-top: 10px;           
+}
+
+/* CARD GRAFIK — lebih tinggi & simetris */
+body.dashboard-page .chart-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    padding: 22px 24px;        
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 480px;                     /* FIX: tinggi baru */
+    overflow: hidden;
+}
+
+/* JUDUL CHART */
+body.dashboard-page .chart-card h3 {
+    color: var(--text-primary);
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+/* WRAPPER CANVAS — lebih tinggi */
+.chart-container {
+    position: relative;
+    width: 100%;
+    height: 400px !important;         /* FIX: tinggi canvas */
+    margin-top: 0;
+}
+
+/* CANVAS */
+.chart-container canvas {
+    width: 100% !important;
+    height: 100% !important;
+    padding-left: 4px !important;
+    display: block;
+}
+
+/* LEGEND */
+.chart-card .chartjs-legend {
+    margin-top: -4px !important;
+}
+
+
+/* ========================================= */
+/* 9. RESPONSIVE LAYOUT — FINAL              */
+/* ========================================= */
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 768px) {
+    body.dashboard-page .chart-grid {
+        grid-template-columns: 1fr;
+    }
+
+    body.dashboard-page .chart-card {
+        height: 300px;
+        padding: 20px;
+    }
+
+    .chart-container {
+        height: 220px !important;
+    }
+}
+
+/* RESPONSIVE — TABLET */
+@media (max-width: 991px) {
+
+    body.snort-rules-page .rules-grid {
+        grid-template-columns: 1fr;
+    }
+
+    body.snort-rules-page .rules-header__metrics {
+        max-width: 100%;
+    }
+
+    .content {
+        padding: 16px;
+    }
+}
+
+/* RESPONSIVE — HP KECIL */
+@media (max-width: 767px) {
+
+    .sidebar {
+        width: 56px;
+    }
+
+    body.sidebar-open .sidebar {
+        width: 190px;
+    }
+
+    .content {
+        margin-left: 56px;
+        padding: 14px;
+    }
+
+    body.sidebar-open .content {
+        margin-left: 190px;
+    }
+
+    body.dashboard-page .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    body.snort-rules-page .rules-search .form-control {
+        min-width: 100%;
+    }
+
+    body.snort-logs-page .ids-header {
+        padding: 14px 16px;
+    }
+
+    .app-footer .footer-inner {
+        padding: 8px 12px;
+        font-size: 0.75rem;
+    }
+}

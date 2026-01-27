@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home Dashboard{% endblock %}
+
+{% block body_class %}dashboard-page{% endblock %}
+
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-header">
+    <div class="header-title">
+        <h1>Security Operations Dashboard</h1>
+        <p>Real-time network security monitoring and threat detection</p>
+    </div>
+</div>
+
+<div class="status-grid">
+
+    <!-- TOTAL ALERTS -->
+    <a href="/snort/logs/" style="text-decoration:none; color:inherit;">
+        <div class="status-card red clickable">
+            <div class="status-header">
+                <span class="status-title">Total Alerts</span>
+                <div class="status-icon"><i class="fa-solid fa-user-secret"></i></div>
+            </div>
+            <div class="status-value" id="threats-count">Loading...</div>
+            <div class="status-change negative"><span>Real-time data</span></div>
+        </div>
+    </a>
+
+    <!-- TOTAL RULES -->
+    <a href="/snort/rules/" style="text-decoration:none; color:inherit;">
+        <div class="status-card yellow clickable">
+            <div class="status-header">
+                <span class="status-title">Total Rules</span>
+                <div class="status-icon"><i class="fa-solid fa-list-check"></i></div>
+            </div>
+            <div class="status-value" id="rules-count">Loading...</div>
+            <div class="status-change positive"><span>Real-time data</span></div>
+        </div>
+    </a>
+
+    <!-- WHITELIST — now clickable -->
+    <a href="/snort/whitelist/" style="text-decoration:none; color:inherit;">
+        <div class="status-card blue clickable">
+            <div class="status-header">
+                <span class="status-title">Total IP Whitelist</span>
+                <div class="status-icon"><i class="fa-solid fa-user-shield"></i></div>
+            </div>
+            <div class="status-value" id="whitelist-count">Loading...</div>
+            <div class="status-change"><span>Real-time data</span></div>
+        </div>
+    </a>
+
+    <!-- BLOCKLIST — now clickable -->
+    <a href="/snort/blocklist/" style="text-decoration:none; color:inherit;">
+        <div class="status-card slate clickable">
+            <div class="status-header">
+                <span class="status-title">Total IP Blocklist</span>
+                <div class="status-icon"><i class="fa-solid fa-skull-crossbones"></i></div>
+            </div>
+            <div class="status-value" id="blocklist-count">Loading...</div>
+            <div class="status-change"><span>Real-time data</span></div>
+        </div>
+    </a>
+
+</div>
+
+<div class="chart-grid">
+    <div class="chart-card">
+        <h3>Alert Dalam 1 Hari</h3>
+        <canvas id="hourlyChart"></canvas>
+    </div>
+    <div class="chart-card">
+        <h3>Alert Per Minggu</h3>
+        <canvas id="weeklyChart"></canvas>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    window.dashboardApiUrl = "{% url 'dashboard:dashboard_api_data' %}";
+</script>
+<script src="{% static 'js/charts.js' %}"></script>
+{% endblock %}

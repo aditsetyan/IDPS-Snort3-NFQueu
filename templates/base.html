@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}NGFW Dashboad{% endblock %}</title>
+    {% load static %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-head">
+            <a class="navbar-brand fw-bold" href="{% url 'dashboard:index' %}">
+                <i class="fas fa-shield-alt"></i>
+                <span class="label">Firewall Plus</span>
+            </a>
+        </div>
+
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link {% if request.resolver_match.app_name == 'dashboard' %}active{% endif %}"
+                   href="{% url 'dashboard:index' %}">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span class="label">Dashboard</span>
+                </a>
+            </li>
+
+            <!-- SNORT SECTION -->
+<li class="nav-item sidebar-group
+    {% if request.resolver_match.app_name == 'snort' %} open{% endif %}">
+    
+    <button class="sidebar-group-header" type="button">
+        <i class="fas fa-bug"></i>
+        <span>Snort</span>
+    </button>
+
+    <div class="sidebar-subnav">
+
+        <!-- Logs -->
+        <a class="sub-link {% if request.resolver_match.url_name == 'logs' %}active{% endif %}"
+           href="{% url 'snort:logs' %}">
+            <i class="fas fa-stream"></i><span>Logs</span>
+        </a>
+
+        <!-- Rules -->
+        <a class="sub-link {% if request.resolver_match.url_name == 'rules' %}active{% endif %}"
+           href="{% url 'snort:rules' %}">
+            <i class="fas fa-book"></i><span>Rule Library</span>
+        </a>
+
+        <!-- WHITELIST -->
+        <a class="sub-link {% if request.resolver_match.url_name == 'ip_whitelist' %}active{% endif %}"
+           href="{% url 'snort:ip_whitelist' %}">
+            <i class="fas fa-user-check"></i><span>IP Whitelist</span>
+        </a>
+
+        <!-- BLOCKLIST -->
+        <a class="sub-link {% if request.resolver_match.url_name == 'ip_blocklist' %}active{% endif %}"
+           href="{% url 'snort:ip_blocklist' %}">
+            <i class="fas fa-user-slash"></i><span>IP Blocklist</span>
+        </a>
+
+    </div>
+</li>
+
+        </ul>
+
+        <!-- Footer (User Dropdown) -->
+        <div class="sidebar-footer">
+            {% if user.is_authenticated %}
+            <div class="dropdown">
+                <a class="d-flex align-items-center text-decoration-none dropdown-toggle"
+                   href="#" id="userMenu" data-bs-toggle="dropdown">
+                    <i class="fas fa-user-circle fa-lg"></i>
+                    <span class="label">{{ user.username }}</span>
+                </a>
+
+                <ul class="dropdown-menu dropdown-menu-dark shadow">
+                    <li><a class="dropdown-item" href="{% url 'admin:index' %}">Admin Panel</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endfor %}
+        {% endif %}
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer class="app-footer">
+        <div class="footer-inner">
+            <span>&copy; {% now "Y" %} <span class="fw-semibold">Adit Setya N</span>. All rights reserved.</span>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+    <script>
+    document.addEventListener('DOMContentLoaded', function(){
+        const body = document.body;
+        const sidebar = document.querySelector('.sidebar');
+        const groups = Array.from(document.querySelectorAll('.sidebar .nav .sidebar-group'));
+
+        groups.forEach(group => {
+            if (group.classList.contains('open')){
+                group.dataset.defaultOpen = 'true';
+            }
+        });
+
+        const restoreGroups = () => {
+            groups.forEach(group => {
+                if (group.dataset.defaultOpen === 'true' || group.dataset.manualOpen === 'true'){
+                    group.classList.add('open');
+                }
+            });
+        };
+
+        sidebar.addEventListener('mouseenter', () => {
+            body.classList.add('sidebar-open');
+            restoreGroups();
+        });
+        sidebar.addEventListener('mouseleave', () => {
+            body.classList.remove('sidebar-open');
+            groups.forEach(group => group.classList.remove('open'));
+        });
+
+        document.querySelectorAll('.sidebar .sidebar-group-header').forEach(header => {
+            header.addEventListener('click', function(e){
+                e.stopPropagation();
+                const parent = this.parentElement;
+                const nowOpen = parent.classList.toggle('open');
+                parent.dataset.manualOpen = nowOpen ? 'true' : '';
+            });
+        });
+    });
+    </script>
+</body>
+</html>
