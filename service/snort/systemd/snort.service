@@ -1,0 +1,17 @@
+[Unit]
+Description=Snort 3 IPS Daemon (Poltek Cilacap Project)
+After=network.target
+
+[Service]
+Type=simple
+# Pastikan path /usr/local/bin/snort sesuai hasil instalasi kita
+# Flag -Q untuk Inline Mode, --daq nfq untuk iptables queue
+ExecStart=/usr/local/bin/snort -c /usr/local/etc/snort/snort.lua \
+    -Q --daq nfq --daq-var queue=0 \
+    -R /opt/IDPS-Snort3-NFQueu/service/snort/local.rules \
+    -l /var/log/snort
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

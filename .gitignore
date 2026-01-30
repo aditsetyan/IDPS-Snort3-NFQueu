@@ -21,3 +21,9 @@ db.sqlite3
 # OS
 .DS_Store
 Thumbs.db
+
+# Snort & Build
+/usr/src/snort3
+/usr/src/libdaq
+*.log
+*.bak.*

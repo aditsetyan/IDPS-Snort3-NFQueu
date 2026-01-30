@@ -4,67 +4,59 @@ document.addEventListener('DOMContentLoaded', function () {
     let weeklyChart = null;
 
     function createHorizontalOptions() {
-        return {
-            indexAxis: 'y',
-            responsive: true,
-            maintainAspectRatio: false,
-
-            layout: {
-                padding: { top: 10, bottom: 16, left: 12, right: 12 }
-            },
-
-            plugins: {
-                legend: {
-                    position: "top",
-                    labels: {
-                        color: "#e5e7eb",
-                        font: { size: 11 },
-                        boxWidth: 12,
-                        boxHeight: 12,
-                        padding: 14
-                    }
-                },
-                tooltip: {
-                    callbacks: {
-                        label: (ctx) => `${ctx.dataset.label}: ${ctx.parsed.x}`
-                    }
+    return {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        layout: {
+            padding: { top: 10, bottom: 16, left: 12, right: 12 }
+        },
+        plugins: {
+            legend: {
+                position: "top",
+                labels: {
+                    color: "#e5e7eb",
+                    font: { size: 11 },
+                    boxWidth: 12,
+                    boxHeight: 12,
+                    padding: 14
                 }
             },
-
-            scales: {
-                x: {
-                    min: 0,
-                    max: 1000,
-                    beginAtZero: true,
-                    ticks: {
-                        color: "#9ca3af",
-                        font: { size: 10 },
-                        stepSize: 100,
-                        padding: 8
-                    },
-                    grid: { color: "rgba(255,255,255,0.04)" }
-                },
-
-                y: {
-                    offset: true,
-                    ticks: {
-                        color: "#9ca3af",
-                        font: {
-                            size: 9,
-                            lineHeight: 0.7
-                        },
-                        padding: 2,
-                        autoSkip: false,
-                        maxRotation: 0,
-                        minRotation: 0
-                    },
-                    grid: {
-                        display: false
-                    }
+            tooltip: {
+                backgroundColor: 'rgba(17, 24, 39, 0.9)', // Warna gelap agar kontras
+                titleFont: { size: 12 },
+                bodyFont: { size: 12 },
+                callbacks: {
+                    label: (ctx) => `${ctx.dataset.label}: ${ctx.parsed.x} alerts`
                 }
             }
-        };
-    }
+        },
+        scales: {
+            x: {
+                beginAtZero: true,
+                // --- PERBAIKAN DI SINI: AUTO-SCALE ---
+                grace: '10%', // Memberi ruang kosong 10% di ujung batang agar tidak mentok
+                ticks: {
+                    color: "#9ca3af",
+                    font: { size: 10 },
+                    // stepSize dihapus agar Chart.js menghitung otomatis sesuai jumlah data
+                    padding: 8
+                },
+                grid: { color: "rgba(255,255,255,0.04)" }
+            },
+            y: {
+                offset: true,
+                ticks: {
+                    color: "#e5e7eb", // Warna teks label hari/jam lebih terang
+                    font: { size: 10, weight: '500' },
+                    padding: 8,
+                    autoSkip: false
+                },
+                grid: { display: false }
+            }
+        }
+    };
+}
 
     /* ===============================
        HOURLY CHART

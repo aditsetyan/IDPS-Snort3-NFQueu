@@ -1,2 +1,0 @@
-All codecs under this directory handle data that would be seen directly
-following or under IP headers.
